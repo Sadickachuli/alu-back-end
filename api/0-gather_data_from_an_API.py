@@ -1,29 +1,29 @@
 #!/usr/bin/python3
-""" Calls an API for completed tasks """
+"""Module"""
+
 import requests
 import sys
 
+"""Module"""
 
 if __name__ == '__main__':
-    userId = sys.argv[1]
-    url_todo = 'https://jsonplaceholder.typicode.com/users/1/todos/'
-    url_user = 'https://jsonplaceholder.typicode.com/users'
-    todo = requests.get(url_todo, params={'userId': userId})
-    user = requests.get(url_user, params={'id': userId})
+    """IF SCRIPT IS NOT RUN AS MODULE"""
+    employee_id = sys.argv[1]
+    user_url = "https://jsonplaceholder.typicode.com/users/{}" \
+        .format(employee_id)
+    todos_url = "https://jsonplaceholder.typicode.com/users/{}/todos/" \
+        .format(employee_id)
 
-    todo_dict_list = todo.json()
-    user_dict_list = user.json()
+    user_info = requests.get(user_url).json()
+    todos_info = requests.get(todos_url).json()
 
-    completed_tasks = []
-    total_tasks = len(todo_dict_list)
-    employee = user_dict_list[0].get('name')
+    employee_name = user_info["name"]
+    task_completed = list(filter(lambda obj:
+                                 (obj["completed"] is True), todos_info))
+    number_of_done_tasks = len(task_completed)
+    total_number_of_tasks = len(todos_info)
 
-    for task in todo_dict_list:
-        if task['completed']:
-            completed_tasks.append(task)
+    print("Employee {} is done with tasks({}/{}):".
+          format(employee_name, number_of_done_tasks, total_number_of_tasks))
 
-    print("Employee {} is done with tasks({}/{}):"
-          .format(employee, len(completed_tasks), total_tasks))
-
-    for task in completed_tasks:
-        print("\t {}".format(task.get('title')))
+    [print("\t " + task["title"]) for task in task_completed]
