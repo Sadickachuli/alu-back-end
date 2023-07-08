@@ -26,4 +26,4 @@ if __name__ == '__main__':
           .format(employee, len(completed_tasks), total_tasks))
 
     for task in completed_tasks:
-        print("\t {}".format(task.get('title')))
+        print("\t {}".format(task.get('title')))   
